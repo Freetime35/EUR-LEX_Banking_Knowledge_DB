@@ -1,0 +1,1 @@
+"""Shared connector models (implemented later)."""

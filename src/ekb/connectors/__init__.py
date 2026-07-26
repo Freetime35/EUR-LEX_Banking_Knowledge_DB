@@ -1,1 +1,1 @@
-"""Package placeholder for future sprints."""
+"""Connectors to official legal data sources."""
