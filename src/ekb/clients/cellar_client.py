@@ -9,7 +9,9 @@ from .types import NoticeType
 class CellarClient:
     """Client for downloading EUR-Lex / Cellar metadata notices."""
 
-    BASE_URL = "https://publications.europa.eu/resource"
+    BASE_URL = "https://publications.europa.eu"
+    RESOURCE_ROOT = "/resource"
+    CELEX_PATH = "/celex/{celex}"
 
     def __init__(
         self,
@@ -24,9 +26,28 @@ class CellarClient:
         celex: str,
         notice: NoticeType = NoticeType.OBJECT,
     ) -> bytes:
-        if not celex.strip():
+        """Download a metadata notice for a CELEX identifier."""
+
+        celex = celex.strip()
+
+        if not celex:
             raise InvalidCelexError(
                 "CELEX identifier cannot be empty."
             )
 
-        raise NotImplementedError
+        url = (
+            f"{self.BASE_URL}"
+            f"{self.RESOURCE_ROOT}"
+            f"{self.CELEX_PATH.format(celex=celex)}"
+        )
+
+        response = self._client.get(
+            url,
+            headers={
+                "Accept": notice.accept_header,
+            },
+        )
+
+        response.raise_for_status()
+
+        return response.content
