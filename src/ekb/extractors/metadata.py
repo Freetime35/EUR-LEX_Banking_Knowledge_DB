@@ -14,6 +14,10 @@ ELI_URI_PREFIX = (
     "http://publications.europa.eu/resource/eli/"
 )
 
+CELLAR_URI_PREFIX = (
+    "http://publications.europa.eu/resource/cellar/"
+)
+
 
 class MetadataExtractor:
 
@@ -35,9 +39,15 @@ class MetadataExtractor:
             document_uri,
         )
 
+        cellar_id = self._extract_cellar_id(
+            graph,
+            document_uri,
+        )
+
         return DocumentMetadata(
             celex=celex,
             eli=eli,
+            cellar_id=cellar_id,
         )
 
     def _extract_celex(
@@ -120,6 +130,53 @@ class MetadataExtractor:
 
         return None
 
+    def _extract_cellar_id(
+        self,
+        graph: Graph,
+        document_uri: URIRef,
+    ) -> str | None:
+        direct_cellar_id = self._cellar_id_from_uri(
+            document_uri
+        )
+
+        if direct_cellar_id is not None:
+            return direct_cellar_id
+
+        for same_as in graph.objects(
+            document_uri,
+            OWL.sameAs,
+        ):
+            cellar_id = self._cellar_id_from_uri(
+                same_as
+            )
+
+            if cellar_id is not None:
+                return cellar_id
+
+        for alias_subject in graph.subjects(
+            OWL.sameAs,
+            document_uri,
+        ):
+            cellar_id = self._cellar_id_from_uri(
+                alias_subject
+            )
+
+            if cellar_id is not None:
+                return cellar_id
+
+            for same_as in graph.objects(
+                alias_subject,
+                OWL.sameAs,
+            ):
+                cellar_id = self._cellar_id_from_uri(
+                    same_as
+                )
+
+                if cellar_id is not None:
+                    return cellar_id
+
+        return None
+
     def _celex_from_uri(
         self,
         uri: object,
@@ -155,3 +212,23 @@ class MetadataExtractor:
             return None
 
         return uri_value
+
+    def _cellar_id_from_uri(
+        self,
+        uri: object,
+    ) -> str | None:
+        if not isinstance(uri, URIRef):
+            return None
+
+        uri_value = str(uri)
+
+        if not uri_value.startswith(
+            CELLAR_URI_PREFIX
+        ):
+            return None
+
+        encoded_cellar_id = uri_value.removeprefix(
+            CELLAR_URI_PREFIX
+        )
+
+        return unquote(encoded_cellar_id)
