@@ -1,4 +1,4 @@
-from ekb.connectors.models import DocumentMetadata
+from ekb.models import DocumentMetadata
 
 
 def test_document_metadata_defaults():
