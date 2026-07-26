@@ -2,10 +2,15 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
-from pydantic_settings import BaseSettings, SettingsConfigDict, TomlConfigSettingsSource
+from pydantic_settings import (
+    BaseSettings,
+    PydanticBaseSettingsSource,
+    SettingsConfigDict,
+    TomlConfigSettingsSource,
+)
 
 
 class AppSettings(BaseModel):
@@ -32,7 +37,7 @@ class HttpSettings(BaseModel):
 
 
 class CollectionSettings(BaseModel):
-    default_languages: list[str] = ["fr", "en"]
+    default_languages: list[str] = Field(default_factory=lambda: ["fr", "en"])
 
 
 class Settings(BaseSettings):
@@ -43,15 +48,27 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    app: AppSettings = AppSettings()
-    database: DatabaseSettings = DatabaseSettings()
-    storage: StorageSettings = StorageSettings()
-    http: HttpSettings = HttpSettings()
-    collection: CollectionSettings = CollectionSettings()
+    app: AppSettings = Field(default_factory=AppSettings)
+    database: DatabaseSettings = Field(default_factory=DatabaseSettings)
+    storage: StorageSettings = Field(default_factory=StorageSettings)
+    http: HttpSettings = Field(default_factory=HttpSettings)
+    collection: CollectionSettings = Field(default_factory=CollectionSettings)
 
     @classmethod
-    def settings_customise_sources(cls, settings_cls, **kwargs):  # type: ignore[no-untyped-def]
-        return (TomlConfigSettingsSource(settings_cls), kwargs["env_settings"])
+    def settings_customise_sources(
+        cls,
+        settings_cls: type[BaseSettings],
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ) -> tuple[PydanticBaseSettingsSource, ...]:
+        return (
+            init_settings,
+            env_settings,
+            TomlConfigSettingsSource(settings_cls),
+            file_secret_settings,
+        )
 
     def ensure_directories(self) -> None:
         for path in (
