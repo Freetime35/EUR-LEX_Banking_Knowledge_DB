@@ -2,6 +2,8 @@
 
 Base de connaissances réglementaire européenne spécialisée **Banque & Finance**.
 
+Le projet construit un **Knowledge Graph** à partir des données RDF publiées par EUR-Lex Cellar afin de modéliser les documents juridiques, leurs relations, les concepts EuroVoc, les procédures, les événements et les publications officielles.
+
 ## Sprint 0
 
 Cette version installe les fondations :
@@ -12,8 +14,7 @@ Cette version installe les fondations :
 - schéma initial des documents et identifiants ;
 - diagnostic local avec `ekb doctor` ;
 - initialisation de la base avec `ekb db init` ;
-- premiers tests automatisés ;
-- documentation d'architecture et ADR.
+- premiers tests automatisés.
 
 ## Installation Windows (CMD)
 
@@ -47,9 +48,13 @@ ekb collection seed
 Pour chaque document, le projet cherchera à conserver, lorsqu'ils existent :
 
 - HTML ;
-- JSON de métadonnées et représentation canonique ;
+- JSON de métadonnées ;
 - PDF ;
 - XML / Formex ;
 - RDF.
 
 Les sources brutes ne seront jamais modifiées.
+
+## Documentation
+
+- [Architecture](docs/architecture.md)
