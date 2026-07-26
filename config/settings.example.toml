@@ -1,0 +1,21 @@
+[app]
+environment = "development"
+log_level = "INFO"
+
+[database]
+url = "sqlite:///data/database/ekb.sqlite3"
+
+[storage]
+raw_dir = "data/raw"
+processed_dir = "data/processed"
+exports_dir = "data/exports"
+cache_dir = "data/cache"
+
+[http]
+timeout_seconds = 60
+max_retries = 5
+rate_limit_per_second = 1.0
+user_agent = "EURLEX-Knowledge-DB/0.1 (+https://github.com/Freetime35/EURLEX_Knowledge_DB)"
+
+[collection]
+default_languages = ["fr", "en"]
