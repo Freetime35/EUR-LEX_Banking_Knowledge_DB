@@ -83,3 +83,116 @@ def test_returns_none_when_document_has_no_same_as() -> None:
     )
 
     assert metadata is None
+
+
+def test_extracts_direct_eli() -> None:
+    graph = Graph()
+
+    document_uri = URIRef(
+        "http://publications.europa.eu/resource/eli/"
+        "reg/2022/2554/oj"
+    )
+    celex_uri = URIRef(
+        "http://publications.europa.eu/resource/celex/"
+        "32022R2554"
+    )
+
+    graph.add((document_uri, OWL.sameAs, celex_uri))
+
+    metadata = MetadataExtractor().extract(
+        graph,
+        document_uri,
+    )
+
+    assert metadata is not None
+    assert metadata.celex == "32022R2554"
+    assert metadata.eli == str(document_uri)
+
+
+def test_extracts_eli_from_same_as() -> None:
+    graph = Graph()
+
+    document_uri = URIRef(
+        "http://example.com/document"
+    )
+    celex_uri = URIRef(
+        "http://publications.europa.eu/resource/celex/"
+        "32022R2554"
+    )
+    eli_uri = URIRef(
+        "http://publications.europa.eu/resource/eli/"
+        "reg/2022/2554/oj"
+    )
+
+    graph.add((document_uri, OWL.sameAs, celex_uri))
+    graph.add((document_uri, OWL.sameAs, eli_uri))
+
+    metadata = MetadataExtractor().extract(
+        graph,
+        document_uri,
+    )
+
+    assert metadata is not None
+    assert metadata.celex == "32022R2554"
+    assert metadata.eli == str(eli_uri)
+
+
+def test_extracts_eli_through_shared_cellar_alias() -> None:
+    graph = Graph()
+
+    document_uri = URIRef(
+        "http://publications.europa.eu/resource/oj/"
+        "JOL_2022_333_R_0001"
+    )
+    cellar_uri = URIRef(
+        "http://publications.europa.eu/resource/cellar/"
+        "0caf473a-85bd-11ed-9887-01aa75ed71a1"
+    )
+    celex_uri = URIRef(
+        "http://publications.europa.eu/resource/celex/"
+        "32022R2554"
+    )
+    eli_uri = URIRef(
+        "http://publications.europa.eu/resource/eli/"
+        "reg/2022/2554/oj"
+    )
+
+    graph.add((cellar_uri, OWL.sameAs, document_uri))
+    graph.add((cellar_uri, OWL.sameAs, celex_uri))
+    graph.add((cellar_uri, OWL.sameAs, eli_uri))
+
+    metadata = MetadataExtractor().extract(
+        graph,
+        document_uri,
+    )
+
+    assert metadata is not None
+    assert metadata.celex == "32022R2554"
+    assert metadata.eli == str(eli_uri)
+
+
+def test_returns_none_when_no_eli() -> None:
+    graph = Graph()
+
+    document_uri = URIRef(
+        "http://publications.europa.eu/resource/oj/test"
+    )
+    cellar_uri = URIRef(
+        "http://publications.europa.eu/resource/cellar/test"
+    )
+    celex_uri = URIRef(
+        "http://publications.europa.eu/resource/celex/"
+        "32022R2554"
+    )
+
+    graph.add((cellar_uri, OWL.sameAs, document_uri))
+    graph.add((cellar_uri, OWL.sameAs, celex_uri))
+
+    metadata = MetadataExtractor().extract(
+        graph,
+        document_uri,
+    )
+
+    assert metadata is not None
+    assert metadata.celex == "32022R2554"
+    assert metadata.eli is None
