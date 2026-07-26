@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+config/settings.toml
+data/database/*.sqlite3
+data/raw/*
+data/processed/*
+data/exports/*
+data/cache/*
+logs/*
+!data/**/.gitkeep
+!logs/.gitkeep
