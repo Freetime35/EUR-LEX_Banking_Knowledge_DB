@@ -5,7 +5,15 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import date
 
+from rdflib import URIRef
 
+@dataclass(slots=True)
+class Document:
+    """A legal document identified in an RDF graph."""
+
+    uri: URIRef
+    metadata: DocumentMetadata | None = None
+    
 @dataclass(slots=True)
 class DocumentMetadata:
     """Metadata describing a legal document."""
@@ -21,3 +29,5 @@ class DocumentMetadata:
     date_publication: date | None = None
 
     languages: list[str] = field(default_factory=list)
+
+
