@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import httpx
 
-from .exceptions import InvalidCelexError
+from .exceptions import InvalidCelexError, NoticeDownloadError
 from .types import NoticeType
 
 
@@ -41,13 +41,18 @@ class CellarClient:
             f"{self.CELEX_PATH.format(celex=celex)}"
         )
 
-        response = self._client.get(
-            url,
-            headers={
-                "Accept": notice.accept_header,
-            },
-        )
+        try:
+            response = self._client.get(
+                url,
+                headers={
+                    "Accept": notice.accept_header,
+                },
+            )
+            response.raise_for_status()
 
-        response.raise_for_status()
+        except httpx.HTTPError as exc:
+            raise NoticeDownloadError(
+                f"Could not download Cellar notice for CELEX {celex}."
+            ) from exc
 
         return response.content
