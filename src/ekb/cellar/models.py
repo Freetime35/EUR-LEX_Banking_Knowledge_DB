@@ -17,6 +17,7 @@ class Item:
     identifier: str
     filename: str
     size: int
+    order: int
 
 
 @dataclass(frozen=True)

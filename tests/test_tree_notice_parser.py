@@ -183,3 +183,22 @@ def test_item_stream_size_is_integer() -> None:
     item = notice.manifestations[0].items[0]
 
     assert isinstance(item.size, int)
+
+def test_item_contains_stream_order() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    item = notice.manifestations[0].items[0]
+
+    assert item.order >= 0
+
+
+def test_item_stream_order_is_integer() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    item = notice.manifestations[0].items[0]
+
+    assert isinstance(item.order, int)

@@ -157,9 +157,26 @@ class TreeNoticeParser:
                 "Tree Notice contains an ITEM with an invalid stream size."
             ) from error
 
+        order_text = element.findtext(
+            "./TECHMD/STREAM_ORDER/VALUE"
+        )
+
+        if order_text is None:
+            raise ValueError(
+                "Tree Notice contains an ITEM without a stream order."
+            )
+
+        try:
+            order = int(order_text)
+        except ValueError as error:
+            raise ValueError(
+                "Tree Notice contains an ITEM with an invalid stream order."
+            ) from error
+
         return Item(
             uri=uri,
             identifier=identifier,
             filename=filename,
             size=size,
+            order=order,
         )
