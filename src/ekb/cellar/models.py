@@ -36,6 +36,7 @@ class TreeNotice:
     document_id: str
     legal_event: str
     year: str
+    treaty_basis: str
     subject_matters: tuple[str, ...]
     creators: tuple[str, ...]
     same_as: tuple[str, ...]

@@ -68,6 +68,15 @@ class TreeNoticeParser:
                 "Tree Notice does not contain a RESOURCE_LEGAL year."
             )
 
+        treaty_basis = root.findtext(
+            "./WORK/RESOURCE_LEGAL_BASED_ON_CONCEPT_TREATY/OP-CODE"
+        )
+
+        if treaty_basis is None:
+            raise ValueError(
+                "Tree Notice does not contain a RESOURCE_LEGAL treaty basis."
+            )
+
         subject_matters = tuple(
             element.text
             for element in root.findall(
@@ -111,6 +120,7 @@ class TreeNoticeParser:
             document_id=document_id,
             legal_event=legal_event,
             year=year,
+            treaty_basis=treaty_basis,
             subject_matters=subject_matters,
             creators=creators,
             same_as=same_as,
@@ -288,3 +298,4 @@ class TreeNoticeParser:
             label=label,
             composition_level=composition_level,
         )
+

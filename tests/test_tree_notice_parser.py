@@ -367,3 +367,19 @@ def test_resource_legal_year_is_string() -> None:
     notice = TreeNoticeParser().parse_bytes(xml)
 
     assert isinstance(notice.year, str)
+
+
+def test_notice_contains_resource_legal_treaty_basis() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert notice.treaty_basis == "TFEU_2012"
+
+
+def test_resource_legal_treaty_basis_is_string() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert isinstance(notice.treaty_basis, str)
