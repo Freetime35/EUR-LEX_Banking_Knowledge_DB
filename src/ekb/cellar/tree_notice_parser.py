@@ -77,6 +77,16 @@ class TreeNoticeParser:
                 "Tree Notice does not contain a RESOURCE_LEGAL treaty basis."
             )
 
+        legal_basis_celex = root.findtext(
+            "./WORK/RESOURCE_LEGAL_BASED_ON_RESOURCE_LEGAL/"
+            "SAMEAS/URI[TYPE='celex']/IDENTIFIER"
+        )
+
+        if legal_basis_celex is None:
+            raise ValueError(
+                "Tree Notice does not contain a RESOURCE_LEGAL legal basis CELEX."
+            )
+
         subject_matters = tuple(
             element.text
             for element in root.findall(
@@ -121,6 +131,7 @@ class TreeNoticeParser:
             legal_event=legal_event,
             year=year,
             treaty_basis=treaty_basis,
+            legal_basis_celex=legal_basis_celex,
             subject_matters=subject_matters,
             creators=creators,
             same_as=same_as,
@@ -298,4 +309,3 @@ class TreeNoticeParser:
             label=label,
             composition_level=composition_level,
         )
-

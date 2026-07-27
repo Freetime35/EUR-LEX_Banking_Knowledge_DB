@@ -383,3 +383,19 @@ def test_resource_legal_treaty_basis_is_string() -> None:
     notice = TreeNoticeParser().parse_bytes(xml)
 
     assert isinstance(notice.treaty_basis, str)
+
+
+def test_notice_contains_resource_legal_basis_celex() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert notice.legal_basis_celex == "12016E114"
+
+
+def test_resource_legal_basis_celex_is_string() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert isinstance(notice.legal_basis_celex, str)
