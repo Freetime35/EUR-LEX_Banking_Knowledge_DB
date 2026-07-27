@@ -79,7 +79,18 @@ class TreeNoticeParser:
             if value.text is not None
         )
 
+        expression_uri = element.findtext(
+            "./MANIFESTATION_MANIFESTS_EXPRESSION/URI/VALUE"
+        )
+
+        if expression_uri is None:
+            raise ValueError(
+                "Tree Notice contains a MANIFESTATION "
+                "without an Expression URI."
+            )
+
         return Manifestation(
             uri=uri,
             same_as=same_as,
+            expression_uri=expression_uri,
         )

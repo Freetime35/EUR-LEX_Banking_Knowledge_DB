@@ -15,6 +15,7 @@ class Manifestation:
 
     uri: str
     same_as: tuple[str, ...]
+    expression_uri: str
 
 
 @dataclass(frozen=True)

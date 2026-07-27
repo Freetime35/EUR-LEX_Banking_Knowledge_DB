@@ -73,3 +73,29 @@ def test_parse_tree_notice_contains_known_manifestation() -> None:
         )
         for manifestation in notice.manifestations
     )
+def test_manifestation_contains_expression_uri() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    manifestation = notice.manifestations[0]
+
+    assert manifestation.expression_uri.startswith(
+        "http://publications.europa.eu/resource/cellar/"
+    )
+
+
+def test_manifestation_links_to_existing_expression() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    expression_uris = {
+        expression.uri
+        for expression in notice.expressions
+    }
+
+    assert all(
+        manifestation.expression_uri in expression_uris
+        for manifestation in notice.manifestations
+    )
