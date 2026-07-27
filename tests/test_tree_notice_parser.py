@@ -304,3 +304,19 @@ def test_work_creators_are_strings() -> None:
     notice = TreeNoticeParser().parse_bytes(xml)
 
     assert all(isinstance(creator, str) for creator in notice.creators)
+
+
+def test_notice_contains_work_date_document() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert notice.document_date == "2022-12-14"
+
+
+def test_work_date_document_is_string() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert isinstance(notice.document_date, str)
