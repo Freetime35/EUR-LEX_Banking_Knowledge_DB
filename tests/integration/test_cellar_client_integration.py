@@ -1,6 +1,5 @@
 import httpx
 import pytest
-from rdflib import Graph
 
 from ekb.clients import CellarClient, NoticeType
 
@@ -12,18 +11,13 @@ def test_download_real_tree_notice() -> None:
     with httpx.Client(timeout=30.0) as http_client:
         client = CellarClient(client=http_client)
 
-        rdf_content = client.download_notice(
+        xml_content = client.download_notice(
             celex=celex,
             notice=NoticeType.TREE,
         )
 
-    assert rdf_content
-    assert b"rdf:RDF" in rdf_content
-
-    graph = Graph()
-    graph.parse(
-        data=rdf_content,
-        format="xml",
-    )
-
-    assert len(graph) > 0
+    assert xml_content
+    assert b"<NOTICE" in xml_content
+    assert b'type="tree"' in xml_content
+    assert b'decoding="eng"' in xml_content
+    assert b"<WORK>" in xml_content

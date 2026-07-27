@@ -13,6 +13,6 @@ class NoticeType(str, Enum):
             return "application/rdf+xml"
 
         if self is NoticeType.TREE:
-            return "application/rdf+xml;notice=tree"
+            return "application/xml;notice=tree"
 
         raise AssertionError(f"Unsupported notice type: {self}")

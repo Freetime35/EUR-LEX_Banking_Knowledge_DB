@@ -12,6 +12,7 @@ class CellarClient:
     BASE_URL = "https://publications.europa.eu"
     RESOURCE_ROOT = "/resource"
     CELEX_PATH = "/celex/{celex}"
+    DEFAULT_DECODING_LANGUAGE = "eng"
 
     def __init__(
         self,
@@ -25,6 +26,8 @@ class CellarClient:
         self,
         celex: str,
         notice: NoticeType = NoticeType.OBJECT,
+        *,
+        language: str = DEFAULT_DECODING_LANGUAGE,
     ) -> bytes:
         """Download a metadata notice for a CELEX identifier."""
 
@@ -41,9 +44,17 @@ class CellarClient:
             f"{self.CELEX_PATH.format(celex=celex)}"
         )
 
+        params = None
+
+        if notice is NoticeType.TREE:
+            params = {
+                "language": language,
+            }
+
         try:
             response = self._client.get(
                 url,
+                params=params,
                 headers={
                     "Accept": notice.accept_header,
                 },
