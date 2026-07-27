@@ -335,3 +335,19 @@ def test_work_document_id_is_string() -> None:
     notice = TreeNoticeParser().parse_bytes(xml)
 
     assert isinstance(notice.document_id, str)
+
+
+def test_notice_contains_work_legal_event() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert notice.legal_event == "2020_266.2022-12-27_PUB_OJ"
+
+
+def test_work_legal_event_is_string() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert isinstance(notice.legal_event, str)

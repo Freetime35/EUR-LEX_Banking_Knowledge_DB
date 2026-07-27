@@ -50,6 +50,15 @@ class TreeNoticeParser:
                 "Tree Notice does not contain a WORK document identifier."
             )
 
+        legal_event = root.findtext(
+            "./WORK/WORK_PART_OF_EVENT_LEGAL/SAMEAS/URI/IDENTIFIER"
+        )
+
+        if legal_event is None:
+            raise ValueError(
+                "Tree Notice does not contain a WORK legal event."
+            )
+
         subject_matters = tuple(
             element.text
             for element in root.findall(
@@ -91,6 +100,7 @@ class TreeNoticeParser:
             resource_legal_type=resource_legal_type,
             document_date=document_date,
             document_id=document_id,
+            legal_event=legal_event,
             subject_matters=subject_matters,
             creators=creators,
             same_as=same_as,
