@@ -255,3 +255,18 @@ def test_work_celex_identifier_is_string() -> None:
     notice = TreeNoticeParser().parse_bytes(xml)
 
     assert isinstance(notice.celex_id, str)
+
+def test_notice_contains_work_resource_legal_type() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert notice.resource_legal_type == "R"
+
+
+def test_work_resource_legal_type_is_string() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert isinstance(notice.resource_legal_type, str)

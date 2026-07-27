@@ -23,6 +23,15 @@ class TreeNoticeParser:
                 "Tree Notice does not contain a WORK CELEX identifier."
             )
 
+        resource_legal_type = root.findtext(
+            "./WORK/RESOURCE_LEGAL_TYPE/VALUE"
+        )
+
+        if resource_legal_type is None:
+            raise ValueError(
+                "Tree Notice does not contain a WORK resource legal type."
+            )
+
         same_as = tuple(
             value.text
             for value in root.findall("./WORK/SAMEAS/URI/VALUE")
@@ -42,6 +51,7 @@ class TreeNoticeParser:
         return TreeNotice(
             work_uri=work_uri,
             celex_id=celex_id,
+            resource_legal_type=resource_legal_type,
             same_as=same_as,
             expressions=expressions,
             manifestations=manifestations,

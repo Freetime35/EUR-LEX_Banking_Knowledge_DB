@@ -39,6 +39,7 @@ class TreeNotice:
 
     work_uri: str
     celex_id: str
+    resource_legal_type: str
     same_as: tuple[str, ...]
     expressions: tuple[Expression, ...]
     manifestations: tuple[Manifestation, ...]
