@@ -10,11 +10,20 @@ class Expression:
 
 
 @dataclass(frozen=True)
+class Item:
+    """Minimal representation of a Cellar Item."""
+
+    uri: str
+    identifier: str
+
+
+@dataclass(frozen=True)
 class Manifestation:
     uri: str
     same_as: tuple[str, ...]
     expression_uri: str
     media_type: str
+    items: tuple[Item, ...]
 
 
 @dataclass(frozen=True)

@@ -124,3 +124,23 @@ def test_manifestation_contains_xhtml_or_pdf_variant() -> None:
         media_type in {"pdfa2a", "xhtml", "fmx4"}
         for media_type in media_types
     )
+
+def test_manifestation_contains_items() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    manifestation = notice.manifestations[0]
+
+    assert len(manifestation.items) > 0
+
+
+def test_item_contains_uri_and_identifier() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    item = notice.manifestations[0].items[0]
+
+    assert item.uri.endswith("/DOC_1")
+    assert item.identifier == "DOC_1"

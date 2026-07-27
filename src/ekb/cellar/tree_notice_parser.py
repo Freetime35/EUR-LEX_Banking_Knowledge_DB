@@ -1,6 +1,6 @@
 from xml.etree import ElementTree
 
-from .models import Expression, Manifestation, TreeNotice
+from .models import Expression, Item, Manifestation, TreeNotice
 
 
 class TreeNoticeParser:
@@ -99,9 +99,39 @@ class TreeNoticeParser:
                 "without a media type."
             )
 
+        items = tuple(
+            self._parse_item(item_element)
+            for item_element in element.findall(
+                "./MANIFESTATION_HAS_ITEM"
+            )
+        )
+
         return Manifestation(
             uri=uri,
             same_as=same_as,
             expression_uri=expression_uri,
             media_type=media_type,
+            items=items,
+        )
+
+    def _parse_item(
+        self,
+        element: ElementTree.Element,
+    ) -> Item:
+        uri = element.findtext("./URI/VALUE")
+
+        if uri is None:
+            raise ValueError(
+                "Tree Notice contains an ITEM without a URI."
+            )
+        identifier = element.findtext("./IDENTIFIER/VALUE")
+
+        if identifier is None:
+            raise ValueError(
+                "Tree Notice contains an ITEM without an identifier."
+            )
+
+        return Item(
+            uri=uri,
+            identifier=identifier,
         )
