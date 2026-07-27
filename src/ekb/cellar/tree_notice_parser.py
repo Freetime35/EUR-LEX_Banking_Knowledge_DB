@@ -16,6 +16,13 @@ class TreeNoticeParser:
                 "Tree Notice does not contain a WORK URI."
             )
 
+        celex_id = root.findtext("./WORK/ID_CELEX/VALUE")
+
+        if celex_id is None:
+            raise ValueError(
+                "Tree Notice does not contain a WORK CELEX identifier."
+            )
+
         same_as = tuple(
             value.text
             for value in root.findall("./WORK/SAMEAS/URI/VALUE")
@@ -34,6 +41,7 @@ class TreeNoticeParser:
 
         return TreeNotice(
             work_uri=work_uri,
+            celex_id=celex_id,
             same_as=same_as,
             expressions=expressions,
             manifestations=manifestations,

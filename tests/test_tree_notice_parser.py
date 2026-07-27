@@ -240,3 +240,18 @@ def test_item_stream_composition_level_is_integer() -> None:
     item = notice.manifestations[0].items[0]
 
     assert isinstance(item.composition_level, int)
+
+def test_notice_contains_work_celex_identifier() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert notice.celex_id == "32022R2554"
+
+
+def test_work_celex_identifier_is_string() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert isinstance(notice.celex_id, str)
