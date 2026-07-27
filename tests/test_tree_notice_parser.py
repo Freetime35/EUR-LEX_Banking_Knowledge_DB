@@ -202,3 +202,22 @@ def test_item_stream_order_is_integer() -> None:
     item = notice.manifestations[0].items[0]
 
     assert isinstance(item.order, int)
+
+def test_item_contains_stream_label() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    item = notice.manifestations[0].items[0]
+
+    assert item.label != ""
+
+
+def test_item_stream_label_is_string() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    item = notice.manifestations[0].items[0]
+
+    assert isinstance(item.label, str)

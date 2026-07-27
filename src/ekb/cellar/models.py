@@ -18,6 +18,7 @@ class Item:
     filename: str
     size: int
     order: int
+    label: str
 
 
 @dataclass(frozen=True)

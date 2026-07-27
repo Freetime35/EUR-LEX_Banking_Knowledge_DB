@@ -173,10 +173,20 @@ class TreeNoticeParser:
                 "Tree Notice contains an ITEM with an invalid stream order."
             ) from error
 
+        label = element.findtext(
+            "./TECHMD/STREAM_LABEL/VALUE"
+        )
+
+        if label is None:
+            raise ValueError(
+                "Tree Notice contains an ITEM without a stream label."
+            )
+
         return Item(
             uri=uri,
             identifier=identifier,
             filename=filename,
             size=size,
             order=order,
+            label=label,
         )
