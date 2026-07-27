@@ -19,6 +19,7 @@ class Item:
     size: int
     order: int
     label: str
+    composition_level: int
 
 
 @dataclass(frozen=True)

@@ -182,6 +182,24 @@ class TreeNoticeParser:
                 "Tree Notice contains an ITEM without a stream label."
             )
 
+        composition_level_text = element.findtext(
+            "./TECHMD/STREAM_COMPOSITION_LEVEL/VALUE"
+        )
+
+        if composition_level_text is None:
+            raise ValueError(
+                "Tree Notice contains an ITEM "
+                "without a stream composition level."
+            )
+
+        try:
+            composition_level = int(composition_level_text)
+        except ValueError as error:
+            raise ValueError(
+                "Tree Notice contains an ITEM with an invalid "
+                "stream composition level."
+            ) from error
+
         return Item(
             uri=uri,
             identifier=identifier,
@@ -189,4 +207,5 @@ class TreeNoticeParser:
             size=size,
             order=order,
             label=label,
+            composition_level=composition_level,
         )

@@ -221,3 +221,22 @@ def test_item_stream_label_is_string() -> None:
     item = notice.manifestations[0].items[0]
 
     assert isinstance(item.label, str)
+
+def test_item_contains_stream_composition_level() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    item = notice.manifestations[0].items[0]
+
+    assert item.composition_level >= 0
+
+
+def test_item_stream_composition_level_is_integer() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    item = notice.manifestations[0].items[0]
+
+    assert isinstance(item.composition_level, int)
