@@ -320,3 +320,18 @@ def test_work_date_document_is_string() -> None:
     notice = TreeNoticeParser().parse_bytes(xml)
 
     assert isinstance(notice.document_date, str)
+
+def test_notice_contains_work_document_id() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert notice.document_id == "immc:PE 41 2022 INIT"
+
+
+def test_work_document_id_is_string() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert isinstance(notice.document_id, str)

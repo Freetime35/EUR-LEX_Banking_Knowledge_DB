@@ -41,6 +41,15 @@ class TreeNoticeParser:
                 "Tree Notice does not contain a WORK document date."
             )
 
+        document_id = root.findtext(
+            "./WORK/WORK_ID_DOCUMENT/VALUE"
+        )
+
+        if document_id is None:
+            raise ValueError(
+                "Tree Notice does not contain a WORK document identifier."
+            )
+
         subject_matters = tuple(
             element.text
             for element in root.findall(
@@ -81,6 +90,7 @@ class TreeNoticeParser:
             celex_id=celex_id,
             resource_legal_type=resource_legal_type,
             document_date=document_date,
+            document_id=document_id,
             subject_matters=subject_matters,
             creators=creators,
             same_as=same_as,
