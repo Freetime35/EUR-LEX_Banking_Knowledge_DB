@@ -164,3 +164,22 @@ def test_manifestation_item_filename_is_not_empty() -> None:
     item = notice.manifestations[0].items[0]
 
     assert item.filename
+
+def test_item_contains_stream_size() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    item = notice.manifestations[0].items[0]
+
+    assert item.size > 0
+
+
+def test_item_stream_size_is_integer() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    item = notice.manifestations[0].items[0]
+
+    assert isinstance(item.size, int)

@@ -141,8 +141,25 @@ class TreeNoticeParser:
                 "Tree Notice contains an ITEM without a filename."
             )
 
+        size_text = element.findtext(
+            "./TECHMD/STREAM_SIZE/VALUE"
+        )
+
+        if size_text is None:
+            raise ValueError(
+                "Tree Notice contains an ITEM without a stream size."
+            )
+
+        try:
+            size = int(size_text)
+        except ValueError as error:
+            raise ValueError(
+                "Tree Notice contains an ITEM with an invalid stream size."
+            ) from error
+
         return Item(
             uri=uri,
             identifier=identifier,
             filename=filename,
+            size=size,
         )
