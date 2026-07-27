@@ -43,6 +43,14 @@ class TreeNoticeParser:
             if element.text is not None
         )
 
+        creators = tuple(
+            element.text
+            for element in root.findall(
+                "./WORK/WORK_CREATED_BY_AGENT/OP-CODE"
+            )
+            if element.text is not None
+        )
+
         same_as = tuple(
             value.text
             for value in root.findall("./WORK/SAMEAS/URI/VALUE")
@@ -64,6 +72,7 @@ class TreeNoticeParser:
             celex_id=celex_id,
             resource_legal_type=resource_legal_type,
             subject_matters=subject_matters,
+            creators=creators,
             same_as=same_as,
             expressions=expressions,
             manifestations=manifestations,

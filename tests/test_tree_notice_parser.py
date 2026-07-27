@@ -288,3 +288,19 @@ def test_work_subject_matters_are_strings() -> None:
         isinstance(subject_matter, str)
         for subject_matter in notice.subject_matters
     )
+
+def test_notice_contains_work_creators() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert "EP" in notice.creators
+    assert "CONSIL" in notice.creators
+
+
+def test_work_creators_are_strings() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert all(isinstance(creator, str) for creator in notice.creators)

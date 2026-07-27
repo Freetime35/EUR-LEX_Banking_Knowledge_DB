@@ -33,6 +33,7 @@ class TreeNotice:
     celex_id: str
     resource_legal_type: str
     subject_matters: tuple[str, ...]
+    creators: tuple[str, ...]
     same_as: tuple[str, ...]
     expressions: tuple[Expression, ...]
     manifestations: tuple[Manifestation, ...]
