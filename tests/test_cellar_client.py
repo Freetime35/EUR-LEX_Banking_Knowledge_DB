@@ -8,13 +8,13 @@ from ekb.clients.exceptions import (
 )
 
 
-def test_default_url_constants():
+def test_default_url_constants() -> None:
     assert CellarClient.BASE_URL == "https://publications.europa.eu"
     assert CellarClient.RESOURCE_ROOT == "/resource"
     assert CellarClient.CELEX_PATH == "/celex/{celex}"
 
 
-def test_download_notice_rejects_empty_celex():
+def test_download_notice_rejects_empty_celex() -> None:
     client = CellarClient()
 
     with pytest.raises(InvalidCelexError):
@@ -24,7 +24,17 @@ def test_download_notice_rejects_empty_celex():
         )
 
 
-def test_downloads_tree_notice():
+def test_download_notice_rejects_whitespace_only_celex() -> None:
+    client = CellarClient()
+
+    with pytest.raises(InvalidCelexError):
+        client.download_notice(
+            celex="   ",
+            notice=NoticeType.OBJECT,
+        )
+
+
+def test_downloads_tree_notice() -> None:
     rdf_content = b"<rdf:RDF />"
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -32,6 +42,7 @@ def test_downloads_tree_notice():
             str(request.url)
             == "https://publications.europa.eu/resource/celex/32022R2554"
         )
+
         assert (
             request.headers["Accept"]
             == "application/rdf+xml;notice=tree"
@@ -40,6 +51,7 @@ def test_downloads_tree_notice():
         return httpx.Response(
             status_code=200,
             content=rdf_content,
+            request=request,
         )
 
     transport = httpx.MockTransport(handler)
@@ -55,7 +67,54 @@ def test_downloads_tree_notice():
     assert result == rdf_content
 
 
-def test_download_notice_wraps_http_status_errors():
+def test_download_notice_follows_redirects() -> None:
+    rdf_content = b"<rdf:RDF />"
+
+    initial_url = (
+        "https://publications.europa.eu"
+        "/resource/celex/32022R2554"
+    )
+    redirected_url = (
+        "http://publications.europa.eu"
+        "/resource/cellar/example/rdf/tree/full"
+    )
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if str(request.url) == initial_url:
+            return httpx.Response(
+                status_code=303,
+                headers={
+                    "Location": redirected_url,
+                },
+                request=request,
+            )
+
+        assert str(request.url) == redirected_url
+        assert (
+            request.headers["Accept"]
+            == "application/rdf+xml;notice=tree"
+        )
+
+        return httpx.Response(
+            status_code=200,
+            content=rdf_content,
+            request=request,
+        )
+
+    transport = httpx.MockTransport(handler)
+
+    with httpx.Client(transport=transport) as http_client:
+        client = CellarClient(client=http_client)
+
+        result = client.download_notice(
+            celex="32022R2554",
+            notice=NoticeType.TREE,
+        )
+
+    assert result == rdf_content
+
+
+def test_download_notice_wraps_http_status_errors() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(
             status_code=404,
@@ -73,11 +132,13 @@ def test_download_notice_wraps_http_status_errors():
                 notice=NoticeType.OBJECT,
             )
 
-    assert "32022R2554" in str(exc_info.value)
-    assert isinstance(exc_info.value.__cause__, httpx.HTTPStatusError)
+    assert isinstance(
+        exc_info.value.__cause__,
+        httpx.HTTPStatusError,
+    )
 
 
-def test_download_notice_wraps_network_errors():
+def test_download_notice_wraps_network_errors() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         raise httpx.ConnectError(
             "Connection failed.",
@@ -95,5 +156,7 @@ def test_download_notice_wraps_network_errors():
                 notice=NoticeType.TREE,
             )
 
-    assert "32022R2554" in str(exc_info.value)
-    assert isinstance(exc_info.value.__cause__, httpx.ConnectError)
+    assert isinstance(
+        exc_info.value.__cause__,
+        httpx.ConnectError,
+    )

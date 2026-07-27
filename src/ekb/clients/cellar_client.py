@@ -47,6 +47,7 @@ class CellarClient:
                 headers={
                     "Accept": notice.accept_header,
                 },
+                follow_redirects=True,
             )
             response.raise_for_status()
 
