@@ -1,6 +1,6 @@
 from xml.etree import ElementTree
 
-from .models import Expression, TreeNotice
+from .models import Expression, Manifestation, TreeNotice
 
 
 class TreeNoticeParser:
@@ -27,10 +27,16 @@ class TreeNoticeParser:
             for element in root.findall("./EXPRESSION")
         )
 
+        manifestations = tuple(
+            self._parse_manifestation(element)
+            for element in root.findall("./MANIFESTATION")
+        )
+
         return TreeNotice(
             work_uri=work_uri,
             same_as=same_as,
             expressions=expressions,
+            manifestations=manifestations,
         )
 
     def _parse_expression(
@@ -54,4 +60,26 @@ class TreeNoticeParser:
         return Expression(
             uri=uri,
             language=language,
+        )
+
+    def _parse_manifestation(
+        self,
+        element: ElementTree.Element,
+    ) -> Manifestation:
+        uri = element.findtext("./URI/VALUE")
+
+        if uri is None:
+            raise ValueError(
+                "Tree Notice contains a MANIFESTATION without a URI."
+            )
+
+        same_as = tuple(
+            value.text
+            for value in element.findall("./SAMEAS/URI/VALUE")
+            if value.text is not None
+        )
+
+        return Manifestation(
+            uri=uri,
+            same_as=same_as,
         )

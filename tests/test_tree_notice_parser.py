@@ -16,14 +16,13 @@ def test_parse_tree_notice_work_uri() -> None:
 
     notice = TreeNoticeParser().parse_bytes(xml)
 
-    assert (
-        notice.work_uri
-        == "http://publications.europa.eu/resource/cellar/"
+    assert notice.work_uri == (
+        "http://publications.europa.eu/resource/cellar/"
         "0caf473a-85bd-11ed-9887-01aa75ed71a1"
     )
 
 
-def test_parse_tree_notice_sameas_contains_celex() -> None:
+def test_parse_tree_notice_contains_celex_same_as() -> None:
     xml = FIXTURE_PATH.read_bytes()
 
     notice = TreeNoticeParser().parse_bytes(xml)
@@ -32,6 +31,7 @@ def test_parse_tree_notice_sameas_contains_celex() -> None:
         "http://publications.europa.eu/resource/celex/32022R2554"
         in notice.same_as
     )
+
 
 def test_parse_tree_notice_contains_expressions() -> None:
     xml = FIXTURE_PATH.read_bytes()
@@ -49,4 +49,27 @@ def test_parse_tree_notice_contains_english_expression() -> None:
     assert any(
         expression.language == "eng"
         for expression in notice.expressions
+    )
+
+
+def test_parse_tree_notice_contains_manifestations() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert len(notice.manifestations) > 0
+
+
+def test_parse_tree_notice_contains_known_manifestation() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert any(
+        manifestation.uri
+        == (
+            "http://publications.europa.eu/resource/cellar/"
+            "0caf473a-85bd-11ed-9887-01aa75ed71a1.0004.01"
+        )
+        for manifestation in notice.manifestations
     )
