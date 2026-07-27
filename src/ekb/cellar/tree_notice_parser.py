@@ -32,6 +32,17 @@ class TreeNoticeParser:
                 "Tree Notice does not contain a WORK resource legal type."
             )
 
+        subject_matters = tuple(
+            element.text
+            for element in root.findall(
+                "./WORK/"
+                "RESOURCE_LEGAL_IS_ABOUT_SUBJECT-MATTER/"
+                "RESOURCE_LEGAL_IS_ABOUT_SUBJECT-MATTER_1/"
+                "OP-CODE"
+            )
+            if element.text is not None
+        )
+
         same_as = tuple(
             value.text
             for value in root.findall("./WORK/SAMEAS/URI/VALUE")
@@ -52,6 +63,7 @@ class TreeNoticeParser:
             work_uri=work_uri,
             celex_id=celex_id,
             resource_legal_type=resource_legal_type,
+            subject_matters=subject_matters,
             same_as=same_as,
             expressions=expressions,
             manifestations=manifestations,
