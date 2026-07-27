@@ -89,8 +89,19 @@ class TreeNoticeParser:
                 "without an Expression URI."
             )
 
+        media_type = element.findtext(
+            "./MANIFESTATION_TYPE/VALUE"
+        )
+
+        if media_type is None:
+            raise ValueError(
+                "Tree Notice contains a MANIFESTATION "
+                "without a media type."
+            )
+
         return Manifestation(
             uri=uri,
             same_as=same_as,
             expression_uri=expression_uri,
+            media_type=media_type,
         )

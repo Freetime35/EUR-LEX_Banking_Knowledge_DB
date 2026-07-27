@@ -99,3 +99,28 @@ def test_manifestation_links_to_existing_expression() -> None:
         manifestation.expression_uri in expression_uris
         for manifestation in notice.manifestations
     )
+
+def test_manifestation_contains_media_type() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    manifestation = notice.manifestations[0]
+
+    assert manifestation.media_type is not None
+
+
+def test_manifestation_contains_xhtml_or_pdf_variant() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    media_types = {
+        manifestation.media_type
+        for manifestation in notice.manifestations
+    }
+
+    assert any(
+        media_type in {"pdfa2a", "xhtml", "fmx4"}
+        for media_type in media_types
+    )
