@@ -5,9 +5,17 @@ from rdflib import Graph, URIRef
 from ekb.extractors.metadata import MetadataExtractor
 
 
-def test_extract_metadata_from_real_notice():
+def test_extract_metadata_from_real_notice() -> None:
     project_root = Path(__file__).resolve().parents[1]
-    notice_path = project_root / "notice.xml"
+    notice_path = (
+        project_root
+        / "tests"
+        / "fixtures"
+        / "cellar"
+        / "32022R2554_tree.rdf"
+    )
+
+    assert notice_path.exists()
 
     graph = Graph()
     graph.parse(notice_path)
