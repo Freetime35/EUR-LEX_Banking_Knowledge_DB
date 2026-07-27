@@ -1,6 +1,6 @@
 from xml.etree import ElementTree
 
-from .models import TreeNotice
+from .models import Expression, TreeNotice
 
 
 class TreeNoticeParser:
@@ -22,7 +22,36 @@ class TreeNoticeParser:
             if value.text is not None
         )
 
+        expressions = tuple(
+            self._parse_expression(element)
+            for element in root.findall("./EXPRESSION")
+        )
+
         return TreeNotice(
             work_uri=work_uri,
             same_as=same_as,
+            expressions=expressions,
+        )
+
+    def _parse_expression(
+        self,
+        element: ElementTree.Element,
+    ) -> Expression:
+        uri = element.findtext("./URI/VALUE")
+
+        if uri is None:
+            raise ValueError(
+                "Tree Notice contains an EXPRESSION without a URI."
+            )
+
+        language = element.findtext(
+            "./EXPRESSION_USES_LANGUAGE/OP-CODE"
+        )
+
+        if language is not None:
+            language = language.lower()
+
+        return Expression(
+            uri=uri,
+            language=language,
         )

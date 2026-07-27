@@ -32,3 +32,21 @@ def test_parse_tree_notice_sameas_contains_celex() -> None:
         "http://publications.europa.eu/resource/celex/32022R2554"
         in notice.same_as
     )
+
+def test_parse_tree_notice_contains_expressions() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert len(notice.expressions) > 0
+
+
+def test_parse_tree_notice_contains_english_expression() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert any(
+        expression.language == "eng"
+        for expression in notice.expressions
+    )
