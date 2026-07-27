@@ -59,6 +59,15 @@ class TreeNoticeParser:
                 "Tree Notice does not contain a WORK legal event."
             )
 
+        year = root.findtext(
+            "./WORK/RESOURCE_LEGAL_YEAR/VALUE"
+        )
+
+        if year is None:
+            raise ValueError(
+                "Tree Notice does not contain a RESOURCE_LEGAL year."
+            )
+
         subject_matters = tuple(
             element.text
             for element in root.findall(
@@ -101,6 +110,7 @@ class TreeNoticeParser:
             document_date=document_date,
             document_id=document_id,
             legal_event=legal_event,
+            year=year,
             subject_matters=subject_matters,
             creators=creators,
             same_as=same_as,

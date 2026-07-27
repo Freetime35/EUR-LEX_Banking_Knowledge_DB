@@ -351,3 +351,19 @@ def test_work_legal_event_is_string() -> None:
     notice = TreeNoticeParser().parse_bytes(xml)
 
     assert isinstance(notice.legal_event, str)
+
+
+def test_notice_contains_resource_legal_year() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert notice.year == "2022"
+
+
+def test_resource_legal_year_is_string() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    assert isinstance(notice.year, str)
