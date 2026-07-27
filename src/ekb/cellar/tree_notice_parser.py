@@ -124,6 +124,7 @@ class TreeNoticeParser:
             raise ValueError(
                 "Tree Notice contains an ITEM without a URI."
             )
+
         identifier = element.findtext("./IDENTIFIER/VALUE")
 
         if identifier is None:
@@ -131,7 +132,17 @@ class TreeNoticeParser:
                 "Tree Notice contains an ITEM without an identifier."
             )
 
+        filename = element.findtext(
+            "./TECHMD/STREAM_NAME/VALUE"
+        )
+
+        if filename is None:
+            raise ValueError(
+                "Tree Notice contains an ITEM without a filename."
+            )
+
         return Item(
             uri=uri,
             identifier=identifier,
+            filename=filename,
         )

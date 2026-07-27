@@ -15,6 +15,7 @@ class Item:
 
     uri: str
     identifier: str
+    filename: str
 
 
 @dataclass(frozen=True)

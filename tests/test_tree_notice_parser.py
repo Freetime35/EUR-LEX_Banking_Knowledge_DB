@@ -144,3 +144,23 @@ def test_item_contains_uri_and_identifier() -> None:
 
     assert item.uri.endswith("/DOC_1")
     assert item.identifier == "DOC_1"
+
+
+def test_item_contains_filename() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    item = notice.manifestations[0].items[0]
+
+    assert item.filename == "L_2022333DE.01000101.doc.html"
+
+
+def test_manifestation_item_filename_is_not_empty() -> None:
+    xml = FIXTURE_PATH.read_bytes()
+
+    notice = TreeNoticeParser().parse_bytes(xml)
+
+    item = notice.manifestations[0].items[0]
+
+    assert item.filename
