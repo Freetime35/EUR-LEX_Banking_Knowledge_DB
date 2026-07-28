@@ -6,6 +6,7 @@ class RelationType(StrEnum):
     AMENDS = "amends"
     REPEALS = "repeals"
     CITES = "cites"
+    BASED_ON = "based_on"
 
 
 @dataclass(frozen=True, slots=True)
