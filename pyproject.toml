@@ -19,6 +19,7 @@ dependencies = [
   "alembic>=1.13,<2",
   "httpx>=0.27,<1",
   "tenacity>=8.2,<10",
+  "rdflib>=7,<8",
   "structlog>=24.1,<26",
 ]
 
@@ -36,10 +37,17 @@ ekb = "ekb.cli.app:app"
 [tool.hatch.build.targets.wheel]
 packages = ["src/ekb"]
 
+
+
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
 addopts = "-q"
+markers = [
+  "integration: tests requiring access to external services",
+]
+
+
 
 [tool.ruff]
 line-length = 100
@@ -52,3 +60,5 @@ select = ["E", "F", "I", "B", "UP"]
 python_version = "3.11"
 strict = true
 packages = ["ekb"]
+
+

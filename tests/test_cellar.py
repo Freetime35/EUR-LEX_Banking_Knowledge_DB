@@ -9,7 +9,6 @@ from ekb.connectors.cellar import (
 from ekb.connectors.exceptions import ResourceNotFoundError
 from ekb.connectors.http import HttpClient
 
-
 SAMPLE_RDF = """\
 <?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">

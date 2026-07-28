@@ -7,7 +7,6 @@ from ekb.db.base import Base
 from ekb.db.models import Collection
 from ekb.db.session import build_engine, build_session_factory
 
-
 DEFAULT_COLLECTIONS = (
     ("BANKING", "Banking", "Réglementation prudentielle et supervision bancaire"),
     ("CAPITAL_REQUIREMENTS", "Capital Requirements", "CRR, CRD et actes associés"),

@@ -7,7 +7,11 @@ from ekb.core.config import Settings
 
 
 def build_engine(settings: Settings) -> Engine:
-    connect_args = {"check_same_thread": False} if settings.database.url.startswith("sqlite") else {}
+    connect_args = (
+        {"check_same_thread": False}
+        if settings.database.url.startswith("sqlite")
+        else {}
+    )
     return create_engine(settings.database.url, connect_args=connect_args)
 
 

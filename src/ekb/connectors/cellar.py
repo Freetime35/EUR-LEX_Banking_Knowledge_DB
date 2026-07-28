@@ -7,7 +7,6 @@ import re
 from .base import BaseConnector
 from .http import HttpClient
 
-
 CELLAR_RESOURCE_BASE_URL = (
     "https://publications.europa.eu/resource/celex"
 )

@@ -51,7 +51,11 @@ def doctor() -> None:
         ("Python", platform.python_version(), sys.version_info >= (3, 11)),
         ("Configuration", "config/settings.toml", Path("config/settings.toml").exists()),
         ("Répertoire raw", str(settings.storage.raw_dir), settings.storage.raw_dir.exists()),
-        ("Répertoire exports", str(settings.storage.exports_dir), settings.storage.exports_dir.exists()),
+        (
+            "Répertoire exports",
+            str(settings.storage.exports_dir),
+            settings.storage.exports_dir.exists(),
+        ),
         ("SQLite", sqlite3.sqlite_version, True),
     ]
 

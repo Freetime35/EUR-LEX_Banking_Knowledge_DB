@@ -15,3 +15,5 @@ data/cache/*
 logs/*
 !data/**/.gitkeep
 !logs/.gitkeep
+# Local RDF inspection files
+notice.xml
