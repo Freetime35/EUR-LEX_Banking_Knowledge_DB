@@ -1,7 +1,13 @@
-from rdflib import Graph, URIRef
-from rdflib.namespace import OWL
+from rdflib import Graph, Namespace, URIRef
+from rdflib.namespace import OWL, RDF
 
 from ekb.extractors.metadata import MetadataExtractor
+
+
+CDM = Namespace(
+    "http://publications.europa.eu/ontology/cdm#"
+)
+
 
 
 def test_extracts_celex_from_same_as_relation() -> None:
@@ -309,3 +315,66 @@ def test_returns_none_when_no_cellar_id() -> None:
 
     assert metadata is not None
     assert metadata.cellar_id is None
+
+
+def test_extracts_rdf_types() -> None:
+    graph = Graph()
+
+    document_uri = URIRef(
+        "http://publications.europa.eu/resource/celex/"
+        "32022R2554"
+    )
+
+    graph.add((document_uri, RDF.type, CDM.work))
+    graph.add((document_uri, RDF.type, CDM.resource_legal))
+    graph.add((document_uri, RDF.type, CDM.regulation))
+    graph.add(
+        (
+            document_uri,
+            RDF.type,
+            CDM["official-journal-act"],
+        )
+    )
+    graph.add(
+        (
+            document_uri,
+            RDF.type,
+            CDM.legislation_secondary,
+        )
+    )
+
+    metadata = MetadataExtractor().extract(
+        graph,
+        document_uri,
+    )
+
+    assert metadata is not None
+    assert metadata.rdf_types == (
+        "legislation_secondary",
+        "official-journal-act",
+        "regulation",
+        "resource_legal",
+        "work",
+    )
+
+
+def test_extracts_empty_rdf_types() -> None:
+    graph = Graph()
+
+    document_uri = URIRef(
+        "http://publications.europa.eu/resource/cellar/test"
+    )
+    celex_uri = URIRef(
+        "http://publications.europa.eu/resource/celex/"
+        "32022R2554"
+    )
+
+    graph.add((document_uri, OWL.sameAs, celex_uri))
+
+    metadata = MetadataExtractor().extract(
+        graph,
+        document_uri,
+    )
+
+    assert metadata is not None
+    assert metadata.rdf_types == ()

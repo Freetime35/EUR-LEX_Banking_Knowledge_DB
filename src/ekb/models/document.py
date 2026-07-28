@@ -32,6 +32,7 @@ class DocumentMetadata:
     cellar_id: str | None = None
 
     document_type: str | None = None
+    rdf_types: tuple[str, ...] = ()
 
     date_document: date | None = None
     date_publication: date | None = None

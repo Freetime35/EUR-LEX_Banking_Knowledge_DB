@@ -9,6 +9,8 @@ from ekb.models.document import DocumentMetadata
 
 from ekb.cdm import RESOURCE_LEGAL_TYPE
 
+from rdflib.namespace import RDF
+
 CELEX_URI_PREFIX = (
     "http://publications.europa.eu/resource/celex/"
 )
@@ -92,6 +94,11 @@ class MetadataExtractor:
             document_uri,
         )
 
+        rdf_types = self._extract_rdf_types(
+            graph,
+            document_uri,
+        )
+
         return DocumentMetadata(
             celex=celex,
             title=title,
@@ -99,6 +106,7 @@ class MetadataExtractor:
             eli=eli,
             cellar_id=cellar_id,
             document_type=document_type,
+            rdf_types=rdf_types,
         )
 
     def _extract_titles(
@@ -538,3 +546,30 @@ class MetadataExtractor:
         )
 
         return unquote(encoded_cellar_id)
+
+
+        
+    def _extract_rdf_types(
+        self,
+        graph: Graph,
+        document_uri: URIRef,
+    ) -> tuple[str, ...]:
+        rdf_types = []
+
+        for value in graph.objects(
+            document_uri,
+            RDF.type,
+        ):
+            value_str = str(value)
+
+            if "#" in value_str:
+                rdf_type = value_str.rsplit("#", 1)[-1]
+            else:
+                rdf_type = value_str.rstrip("/").rsplit("/", 1)[-1]
+
+            rdf_type = rdf_type.strip()
+
+            if rdf_type:
+                rdf_types.append(rdf_type)
+
+        return tuple(sorted(set(rdf_types)))
