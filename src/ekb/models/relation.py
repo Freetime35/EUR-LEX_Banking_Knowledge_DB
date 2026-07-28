@@ -4,6 +4,7 @@ from enum import StrEnum
 
 class RelationType(StrEnum):
     AMENDS = "amends"
+    REPEALS = "repeals"
 
 
 @dataclass(frozen=True, slots=True)
