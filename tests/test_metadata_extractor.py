@@ -378,3 +378,94 @@ def test_extracts_empty_rdf_types() -> None:
 
     assert metadata is not None
     assert metadata.rdf_types == ()
+
+
+def test_derives_regulation_legal_type() -> None:
+    graph = Graph()
+
+    document_uri = URIRef(
+        "http://publications.europa.eu/resource/celex/"
+        "32022R2554"
+    )
+
+    graph.add((document_uri, RDF.type, CDM.regulation))
+
+    metadata = MetadataExtractor().extract(
+        graph,
+        document_uri,
+    )
+
+    assert metadata is not None
+    assert metadata.legal_type == "regulation"
+
+
+def test_prefers_delegated_regulation_legal_type() -> None:
+    graph = Graph()
+
+    document_uri = URIRef(
+        "http://publications.europa.eu/resource/celex/"
+        "32022R2554"
+    )
+
+    graph.add((document_uri, RDF.type, CDM.regulation))
+    graph.add(
+        (
+            document_uri,
+            RDF.type,
+            CDM.regulation_delegated,
+        )
+    )
+
+    metadata = MetadataExtractor().extract(
+        graph,
+        document_uri,
+    )
+
+    assert metadata is not None
+    assert metadata.legal_type == "regulation_delegated"
+
+
+def test_prefers_implementing_directive_legal_type() -> None:
+    graph = Graph()
+
+    document_uri = URIRef(
+        "http://publications.europa.eu/resource/celex/"
+        "32022L2554"
+    )
+
+    graph.add((document_uri, RDF.type, CDM.directive))
+    graph.add(
+        (
+            document_uri,
+            RDF.type,
+            CDM.directive_implementing,
+        )
+    )
+
+    metadata = MetadataExtractor().extract(
+        graph,
+        document_uri,
+    )
+
+    assert metadata is not None
+    assert metadata.legal_type == "directive_implementing"
+
+
+def test_returns_none_when_rdf_types_have_no_known_legal_type() -> None:
+    graph = Graph()
+
+    document_uri = URIRef(
+        "http://publications.europa.eu/resource/celex/"
+        "32022R2554"
+    )
+
+    graph.add((document_uri, RDF.type, CDM.work))
+    graph.add((document_uri, RDF.type, CDM.resource_legal))
+
+    metadata = MetadataExtractor().extract(
+        graph,
+        document_uri,
+    )
+
+    assert metadata is not None
+    assert metadata.legal_type is None

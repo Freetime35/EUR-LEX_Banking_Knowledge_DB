@@ -54,6 +54,20 @@ LANGUAGE_CODE_MAPPING = {
 }
 
 
+LEGAL_TYPE_PRIORITY = (
+    "regulation_delegated",
+    "regulation_implementing",
+    "directive_delegated",
+    "directive_implementing",
+    "regulation",
+    "directive",
+    "decision",
+    "recommendation",
+    "opinion",
+    "resolution",
+)
+
+
 class MetadataExtractor:
     """Extract metadata describing a legal document."""
 
@@ -99,6 +113,10 @@ class MetadataExtractor:
             document_uri,
         )
 
+        legal_type = self._extract_legal_type(
+            rdf_types,
+        )
+
         return DocumentMetadata(
             celex=celex,
             title=title,
@@ -106,8 +124,9 @@ class MetadataExtractor:
             eli=eli,
             cellar_id=cellar_id,
             document_type=document_type,
+            legal_type=legal_type,
             rdf_types=rdf_types,
-        )
+            )
 
     def _extract_titles(
         self,
@@ -573,3 +592,16 @@ class MetadataExtractor:
                 rdf_types.append(rdf_type)
 
         return tuple(sorted(set(rdf_types)))
+
+
+    def _extract_legal_type(
+        self,
+        rdf_types: tuple[str, ...],
+    ) -> str | None:
+        rdf_type_set = set(rdf_types)
+
+        for legal_type in LEGAL_TYPE_PRIORITY:
+            if legal_type in rdf_type_set:
+                return legal_type
+
+        return None
