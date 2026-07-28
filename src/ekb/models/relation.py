@@ -5,6 +5,7 @@ from enum import StrEnum
 class RelationType(StrEnum):
     AMENDS = "amends"
     REPEALS = "repeals"
+    CITES = "cites"
 
 
 @dataclass(frozen=True, slots=True)

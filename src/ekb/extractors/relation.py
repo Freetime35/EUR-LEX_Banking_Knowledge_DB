@@ -21,6 +21,9 @@ RELATION_MAPPING = {
     URIRef(
         f"{CDM_URI_PREFIX}resource_legal_repeals_resource_legal"
     ): RelationType.REPEALS,
+    URIRef(
+        f"{CDM_URI_PREFIX}work_cites_work"
+    ): RelationType.CITES,
 }
 
 
