@@ -10,11 +10,8 @@ from ekb.cdm import (
     RESOURCE_LEGAL_REPEALS,
     WORK_CITES,
 )
+from ekb.identifiers import CELEX_URI_PREFIX
 from ekb.models.relation import LegalRelation, RelationType
-
-CELEX_URI_PREFIX = (
-    "http://publications.europa.eu/resource/celex/"
-)
 
 RELATION_MAPPING = {
     RESOURCE_LEGAL_AMENDS: RelationType.AMENDS,
