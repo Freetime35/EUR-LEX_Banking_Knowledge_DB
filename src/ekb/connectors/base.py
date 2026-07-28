@@ -1,7 +1,5 @@
 """Base connector interfaces."""
 
-from abc import ABC
 
-
-class BaseConnector(ABC):
+class BaseConnector:
     """Base class for all official source connectors."""

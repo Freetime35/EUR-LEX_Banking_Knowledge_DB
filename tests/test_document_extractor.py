@@ -1,4 +1,4 @@
-from rdflib import Graph, RDF, URIRef
+from rdflib import RDF, Graph, URIRef
 
 from ekb.extractors.document import CDM, DocumentExtractor
 

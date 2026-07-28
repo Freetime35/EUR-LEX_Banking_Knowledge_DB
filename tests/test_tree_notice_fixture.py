@@ -1,7 +1,6 @@
 from pathlib import Path
 from xml.etree import ElementTree
 
-
 FIXTURE_PATH = (
     Path(__file__).parent
     / "fixtures"

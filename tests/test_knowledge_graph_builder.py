@@ -1,10 +1,10 @@
-from rdflib import Graph, RDF, URIRef
+from rdflib import RDF, Graph, URIRef
 from rdflib.namespace import OWL
 
 from ekb.extractors.document import CDM
+from ekb.extractors.metadata import MetadataExtractor
 from ekb.knowledge.builder import KnowledgeGraphBuilder
 
-from ekb.extractors.metadata import MetadataExtractor
 
 def test_build_returns_knowledge_graph() -> None:
     graph = Graph()

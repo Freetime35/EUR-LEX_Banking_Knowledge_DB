@@ -1,9 +1,10 @@
+from xml.sax import SAXParseException
+
 import pytest
 from rdflib import Graph, Literal, URIRef
 from rdflib.namespace import DCTERMS
 
 from ekb.parsers.rdf import RdfParser
-
 
 VALID_RDF_XML = """<?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF
@@ -45,5 +46,5 @@ def test_parse_rejects_empty_content() -> None:
 def test_parse_rejects_invalid_rdf_xml() -> None:
     parser = RdfParser()
 
-    with pytest.raises(Exception):
+    with pytest.raises(SAXParseException):
         parser.parse("<not-valid-rdf>")

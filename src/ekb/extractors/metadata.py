@@ -7,7 +7,6 @@ from rdflib.namespace import OWL
 
 from ekb.models.document import DocumentMetadata
 
-
 CELEX_URI_PREFIX = (
     "http://publications.europa.eu/resource/celex/"
 )

@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class NoticeType(str, Enum):
+class NoticeType(StrEnum):
     """Supported Cellar metadata notice types."""
 
     OBJECT = "object"

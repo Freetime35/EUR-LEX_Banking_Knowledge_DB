@@ -1,10 +1,9 @@
 """Document extraction from RDF graphs."""
 
-from rdflib import Graph, RDF, URIRef
+from rdflib import RDF, Graph, URIRef
 from rdflib.namespace import Namespace
 
 from ekb.models.document import Document
-
 
 CDM = Namespace("http://publications.europa.eu/ontology/cdm#")
 

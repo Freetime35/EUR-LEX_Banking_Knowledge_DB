@@ -8,7 +8,6 @@ import httpx
 
 from .exceptions import RemoteServiceError, ResourceNotFoundError
 
-
 DEFAULT_TIMEOUT = 30.0
 DEFAULT_USER_AGENT = "ekb/0.1.0"
 

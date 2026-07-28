@@ -2,7 +2,6 @@ from pathlib import Path
 
 from ekb.cellar import TreeNoticeParser
 
-
 FIXTURE_PATH = (
     Path(__file__).parent
     / "fixtures"
