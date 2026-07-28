@@ -4,29 +4,23 @@ from urllib.parse import unquote
 
 from rdflib import Graph, URIRef
 
+from ekb.cdm import (
+    RESOURCE_LEGAL_AMENDS,
+    RESOURCE_LEGAL_BASED_ON,
+    RESOURCE_LEGAL_REPEALS,
+    WORK_CITES,
+)
 from ekb.models.relation import LegalRelation, RelationType
 
 CELEX_URI_PREFIX = (
     "http://publications.europa.eu/resource/celex/"
 )
 
-CDM_URI_PREFIX = (
-    "http://publications.europa.eu/ontology/cdm#"
-)
-
 RELATION_MAPPING = {
-    URIRef(
-        f"{CDM_URI_PREFIX}resource_legal_amends_resource_legal"
-    ): RelationType.AMENDS,
-    URIRef(
-        f"{CDM_URI_PREFIX}resource_legal_repeals_resource_legal"
-    ): RelationType.REPEALS,
-    URIRef(
-        f"{CDM_URI_PREFIX}work_cites_work"
-    ): RelationType.CITES,
-    URIRef(
-        f"{CDM_URI_PREFIX}resource_legal_based_on_resource_legal"
-    ): RelationType.BASED_ON,
+    RESOURCE_LEGAL_AMENDS: RelationType.AMENDS,
+    RESOURCE_LEGAL_REPEALS: RelationType.REPEALS,
+    WORK_CITES: RelationType.CITES,
+    RESOURCE_LEGAL_BASED_ON: RelationType.BASED_ON,
 }
 
 
