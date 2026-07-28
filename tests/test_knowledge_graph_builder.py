@@ -4,6 +4,7 @@ from rdflib.namespace import OWL
 from ekb.extractors.document import CDM
 from ekb.extractors.metadata import MetadataExtractor
 from ekb.knowledge.builder import KnowledgeGraphBuilder
+from ekb.models.relation import LegalRelation, RelationType
 
 
 def test_build_returns_knowledge_graph() -> None:
@@ -116,3 +117,31 @@ def test_returns_none_when_cellar_alias_has_no_celex() -> None:
     )
 
     assert metadata is None
+
+def test_build_extracts_legal_relations() -> None:
+    graph = Graph()
+
+    source_uri = URIRef(
+        "http://publications.europa.eu/resource/celex/"
+        "32022R2554"
+    )
+    target_uri = URIRef(
+        "http://publications.europa.eu/resource/celex/"
+        "32013R0575"
+    )
+    predicate = URIRef(
+        "http://publications.europa.eu/ontology/cdm#"
+        "resource_legal_amends_resource_legal"
+    )
+
+    graph.add((source_uri, predicate, target_uri))
+
+    knowledge_graph = KnowledgeGraphBuilder().build(graph)
+
+    assert knowledge_graph.relations == [
+        LegalRelation(
+            source_celex="32022R2554",
+            relation=RelationType.AMENDS,
+            target_celex="32013R0575",
+        )
+    ]
