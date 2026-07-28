@@ -105,3 +105,30 @@ def test_extracts_cites_relation() -> None:
             target_celex="32013R0575",
         )
     ]
+
+
+def test_extracts_based_on_relation() -> None:
+    graph = Graph()
+
+    source = URIRef(
+        "http://publications.europa.eu/resource/celex/32022R2554"
+    )
+    target = URIRef(
+        "http://publications.europa.eu/resource/celex/12012E/TXT"
+    )
+    predicate = URIRef(
+        "http://publications.europa.eu/ontology/cdm#"
+        "resource_legal_based_on_resource_legal"
+    )
+
+    graph.add((source, predicate, target))
+
+    relations = LegalRelationExtractor().extract(graph)
+
+    assert relations == [
+        LegalRelation(
+            source_celex="32022R2554",
+            relation=RelationType.BASED_ON,
+            target_celex="12012E/TXT",
+        )
+    ]
