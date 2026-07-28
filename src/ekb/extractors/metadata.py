@@ -7,6 +7,8 @@ from rdflib.namespace import OWL
 
 from ekb.models.document import DocumentMetadata
 
+from ekb.cdm import RESOURCE_LEGAL_TYPE
+
 CELEX_URI_PREFIX = (
     "http://publications.europa.eu/resource/celex/"
 )
@@ -85,12 +87,18 @@ class MetadataExtractor:
             titles
         )
 
+        document_type = self._extract_document_type(
+            graph,
+            document_uri,
+        )
+
         return DocumentMetadata(
             celex=celex,
             title=title,
             titles=titles,
             eli=eli,
             cellar_id=cellar_id,
+            document_type=document_type,
         )
 
     def _extract_titles(
@@ -457,6 +465,23 @@ class MetadataExtractor:
                     return cellar_id
 
         return None
+
+    def _extract_document_type(
+        self,
+        graph: Graph,
+        document_uri: URIRef,
+    ) -> str | None:
+        value = graph.value(
+            document_uri,
+            RESOURCE_LEGAL_TYPE,
+        )
+
+        if value is None:
+            return None
+
+        document_type = str(value).strip()
+
+        return document_type or None
 
     def _celex_from_uri(
         self,
