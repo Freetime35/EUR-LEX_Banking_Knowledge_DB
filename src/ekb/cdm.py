@@ -1,6 +1,5 @@
 from rdflib import URIRef
 
-
 CDM_URI_PREFIX = "http://publications.europa.eu/ontology/cdm#"
 
 RESOURCE_LEGAL_AMENDS = URIRef(

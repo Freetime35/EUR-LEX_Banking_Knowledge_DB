@@ -3,13 +3,10 @@
 from urllib.parse import unquote
 
 from rdflib import Graph, Literal, URIRef
-from rdflib.namespace import OWL
-
-from ekb.models.document import DocumentMetadata
+from rdflib.namespace import OWL, RDF
 
 from ekb.cdm import RESOURCE_LEGAL_TYPE
-
-from rdflib.namespace import RDF
+from ekb.models.document import DocumentMetadata
 
 CELEX_URI_PREFIX = (
     "http://publications.europa.eu/resource/celex/"

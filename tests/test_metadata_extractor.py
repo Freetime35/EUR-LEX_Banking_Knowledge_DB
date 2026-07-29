@@ -3,7 +3,6 @@ from rdflib.namespace import OWL, RDF
 
 from ekb.extractors.metadata import MetadataExtractor
 
-
 CDM = Namespace(
     "http://publications.europa.eu/ontology/cdm#"
 )
