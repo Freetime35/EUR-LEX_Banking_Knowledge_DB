@@ -8,7 +8,7 @@ from ekb.cdm import (
     RESOURCE_LEGAL_AMENDS,
     RESOURCE_LEGAL_BASED_ON,
     RESOURCE_LEGAL_REPEALS,
-    WORK_CITES,
+    WORK_CITES_WORK,
 )
 from ekb.identifiers import CELEX_URI_PREFIX
 from ekb.models.relation import LegalRelation, RelationType
@@ -16,7 +16,7 @@ from ekb.models.relation import LegalRelation, RelationType
 RELATION_MAPPING = {
     RESOURCE_LEGAL_AMENDS: RelationType.AMENDS,
     RESOURCE_LEGAL_REPEALS: RelationType.REPEALS,
-    WORK_CITES: RelationType.CITES,
+    WORK_CITES_WORK: RelationType.CITES,
     RESOURCE_LEGAL_BASED_ON: RelationType.BASED_ON,
 }
 

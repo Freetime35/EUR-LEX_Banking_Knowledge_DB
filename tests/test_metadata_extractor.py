@@ -579,3 +579,33 @@ def test_extract_is_about_resources() -> None:
         "http://publications.europa.eu/"
         "resource/authority/subject-matter/TELE",
     )
+
+
+def test_extract_cited_works() -> None:
+    graph = Graph()
+
+    work = URIRef(
+        "http://publications.europa.eu/resource/celex/32022R2554"
+    )
+
+    cited = URIRef(
+        "http://publications.europa.eu/resource/celex/32013R0575"
+    )
+
+    graph.add(
+        (
+            work,
+            CDM.work_cites_work,
+            cited,
+        )
+    )
+
+    metadata = MetadataExtractor().extract(
+        graph,
+        work,
+    )
+
+    assert metadata is not None
+    assert metadata.cited_works == (
+        str(cited),
+    )

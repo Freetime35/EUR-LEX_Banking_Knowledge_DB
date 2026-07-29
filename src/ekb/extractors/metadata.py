@@ -8,6 +8,7 @@ from rdflib.namespace import OWL, RDF
 from ekb.cdm import (
     IS_ABOUT,
     RESOURCE_LEGAL_TYPE,
+    WORK_CITES_WORK,
     WORK_DATE_DOCUMENT,
     WORK_DATE_PUBLICATION,
     WORK_IS_ABOUT_CONCEPT_EUROVOC,
@@ -135,17 +136,15 @@ class MetadataExtractor:
             document_uri,
         )
 
-        is_about = tuple(
-            sorted(
-                str(resource)
-                for resource in graph.objects(
-                    document_uri,
-                    IS_ABOUT,
-                )
-                if isinstance(resource, URIRef)
-            )
+        is_about = self._extract_is_about(
+            graph,
+            document_uri,
         )
-
+        
+        cited_works = self._extract_cited_works(
+            graph,
+            document_uri,
+        )
 
         return DocumentMetadata(
             celex=celex,
@@ -160,6 +159,7 @@ class MetadataExtractor:
             date_publication=date_publication,
             eurovoc_concepts=eurovoc_concepts,
             is_about=is_about,
+            cited_works=cited_works,
         )
 
     def _extract_titles(
@@ -674,18 +674,56 @@ class MetadataExtractor:
 
         return None
 
+    def _extract_uri_values(
+        self,
+        graph: Graph,
+        subject: URIRef,
+        predicate: URIRef,
+    ) -> tuple[str, ...]:
+        values = {
+            str(value).strip()
+            for value in graph.objects(
+                subject,
+                predicate,
+            )
+            if isinstance(value, URIRef)
+            and str(value).strip()
+        }
+
+        return tuple(sorted(values))
+
     def _extract_eurovoc_concepts(
         self,
         graph: Graph,
         document_uri: URIRef,
     ) -> tuple[str, ...]:
-        concepts = {
-            str(value).strip()
-            for value in graph.objects(
-                document_uri,
-                WORK_IS_ABOUT_CONCEPT_EUROVOC,
-            )
-            if str(value).strip()
-        }
+        return self._extract_uri_values(
+            graph,
+            document_uri,
+            WORK_IS_ABOUT_CONCEPT_EUROVOC,
+        )
 
-        return tuple(sorted(concepts))
+
+    def _extract_is_about(
+        self,
+        graph: Graph,
+        document_uri: URIRef,
+    ) -> tuple[str, ...]:
+        return self._extract_uri_values(
+            graph,
+            document_uri,
+            IS_ABOUT,
+        )
+
+
+    def _extract_cited_works(
+        self,
+        graph: Graph,
+        document_uri: URIRef,
+    ) -> tuple[str, ...]:
+        return self._extract_uri_values(
+            graph,
+            document_uri,
+            WORK_CITES_WORK,
+        )
+

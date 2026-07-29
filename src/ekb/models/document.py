@@ -43,3 +43,5 @@ class DocumentMetadata:
     eurovoc_concepts: tuple[str, ...] = ()
 
     is_about: tuple[str, ...] = ()
+
+    cited_works: tuple[str, ...] = ()

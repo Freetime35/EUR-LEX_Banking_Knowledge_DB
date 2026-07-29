@@ -10,7 +10,7 @@ RESOURCE_LEGAL_REPEALS = URIRef(
     f"{CDM_URI_PREFIX}resource_legal_repeals_resource_legal"
 )
 
-WORK_CITES = URIRef(
+WORK_CITES_WORK = URIRef(
     f"{CDM_URI_PREFIX}work_cites_work"
 )
 
