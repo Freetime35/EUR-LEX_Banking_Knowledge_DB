@@ -9,6 +9,7 @@ from ekb.cdm import (
     RESOURCE_LEGAL_TYPE,
     WORK_DATE_DOCUMENT,
     WORK_DATE_PUBLICATION,
+    WORK_IS_ABOUT_CONCEPT_EUROVOC,
 )
 from ekb.models.document import DocumentMetadata
 
@@ -128,6 +129,11 @@ class MetadataExtractor:
             document_uri,
         )
 
+        eurovoc_concepts = self._extract_eurovoc_concepts(
+            graph,
+            document_uri,
+        )
+
         return DocumentMetadata(
             celex=celex,
             title=title,
@@ -139,6 +145,7 @@ class MetadataExtractor:
             rdf_types=rdf_types,
             date_document=date_document,
             date_publication=date_publication,
+            eurovoc_concepts=eurovoc_concepts,
         )
 
     def _extract_titles(
@@ -652,3 +659,19 @@ class MetadataExtractor:
                 return legal_type
 
         return None
+
+    def _extract_eurovoc_concepts(
+        self,
+        graph: Graph,
+        document_uri: URIRef,
+    ) -> tuple[str, ...]:
+        concepts = {
+            str(value).strip()
+            for value in graph.objects(
+                document_uri,
+                WORK_IS_ABOUT_CONCEPT_EUROVOC,
+            )
+            if str(value).strip()
+        }
+
+        return tuple(sorted(concepts))

@@ -510,3 +510,37 @@ def test_extract_publication_date() -> None:
 
     assert metadata is not None
     assert metadata.date_publication == "2022-12-27"
+
+
+def test_extract_eurovoc_concepts() -> None:
+    graph = Graph()
+
+    work = URIRef(
+        "http://publications.europa.eu/resource/celex/32022R2554"
+    )
+
+    graph.add(
+        (
+            work,
+            CDM.work_is_about_concept_eurovoc,
+            URIRef("http://eurovoc.europa.eu/c_406ad4cc"),
+        )
+    )
+    graph.add(
+        (
+            work,
+            CDM.work_is_about_concept_eurovoc,
+            URIRef("http://eurovoc.europa.eu/8469"),
+        )
+    )
+
+    metadata = MetadataExtractor().extract(
+        graph,
+        work,
+    )
+
+    assert metadata is not None
+    assert metadata.eurovoc_concepts == (
+        "http://eurovoc.europa.eu/8469",
+        "http://eurovoc.europa.eu/c_406ad4cc",
+    )

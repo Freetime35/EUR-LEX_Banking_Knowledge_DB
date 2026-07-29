@@ -29,3 +29,8 @@ WORK_DATE_DOCUMENT = URIRef(
 WORK_DATE_PUBLICATION = URIRef(
     f"{CDM_URI_PREFIX}work_date_publication"
 )
+
+WORK_IS_ABOUT_CONCEPT_EUROVOC = URIRef(
+    f"{CDM_URI_PREFIX}work_is_about_concept_eurovoc"
+)
+

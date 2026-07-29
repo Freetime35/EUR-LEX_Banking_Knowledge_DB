@@ -39,3 +39,5 @@ class DocumentMetadata:
     date_publication: date | None = None
 
     languages: list[str] = field(default_factory=list)
+    
+    eurovoc_concepts: tuple[str, ...] = ()
