@@ -5,7 +5,10 @@ from urllib.parse import unquote
 from rdflib import Graph, Literal, URIRef
 from rdflib.namespace import OWL, RDF
 
-from ekb.cdm import RESOURCE_LEGAL_TYPE
+from ekb.cdm import (
+    RESOURCE_LEGAL_TYPE,
+    WORK_DATE_DOCUMENT,
+)
 from ekb.models.document import DocumentMetadata
 
 CELEX_URI_PREFIX = (
@@ -114,6 +117,11 @@ class MetadataExtractor:
             rdf_types,
         )
 
+        date_document = self._extract_document_date(
+            graph,
+            document_uri,
+        )
+
         return DocumentMetadata(
             celex=celex,
             title=title,
@@ -123,7 +131,8 @@ class MetadataExtractor:
             document_type=document_type,
             legal_type=legal_type,
             rdf_types=rdf_types,
-            )
+            date_document=date_document,
+        )
 
     def _extract_titles(
         self,
@@ -489,6 +498,23 @@ class MetadataExtractor:
                     return cellar_id
 
         return None
+
+    def _extract_document_date(
+        self,
+        graph: Graph,
+        document_uri: URIRef,
+    ) -> str | None:
+        value = graph.value(
+            document_uri,
+            WORK_DATE_DOCUMENT,
+        )
+
+        if value is None:
+            return None
+
+        document_date = str(value).strip()
+
+        return document_date or None
 
     def _extract_document_type(
         self,

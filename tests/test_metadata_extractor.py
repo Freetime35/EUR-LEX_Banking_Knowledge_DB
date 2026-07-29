@@ -1,4 +1,4 @@
-from rdflib import Graph, Namespace, URIRef
+from rdflib import Graph, Literal, Namespace, URIRef
 from rdflib.namespace import OWL, RDF
 
 from ekb.extractors.metadata import MetadataExtractor
@@ -468,3 +468,21 @@ def test_returns_none_when_rdf_types_have_no_known_legal_type() -> None:
 
     assert metadata is not None
     assert metadata.legal_type is None
+
+
+def test_extract_document_date() -> None:
+    graph = Graph()
+
+    work = URIRef("http://publications.europa.eu/resource/celex/32022R2554")
+
+    graph.add(
+        (
+            work,
+            CDM.work_date_document,
+            Literal("2022-12-14"),
+        )
+    )
+
+    metadata = MetadataExtractor().extract(graph, work)
+
+    assert metadata.date_document == "2022-12-14"

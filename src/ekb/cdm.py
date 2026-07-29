@@ -21,3 +21,7 @@ RESOURCE_LEGAL_BASED_ON = URIRef(
 RESOURCE_LEGAL_TYPE = URIRef(
     f"{CDM_URI_PREFIX}resource_legal_type"
 )
+
+WORK_DATE_DOCUMENT = URIRef(
+    f"{CDM_URI_PREFIX}work_date_document"
+)
