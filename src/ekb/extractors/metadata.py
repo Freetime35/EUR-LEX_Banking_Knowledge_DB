@@ -6,6 +6,7 @@ from rdflib import Graph, Literal, URIRef
 from rdflib.namespace import OWL, RDF
 
 from ekb.cdm import (
+    IS_ABOUT,
     RESOURCE_LEGAL_TYPE,
     WORK_DATE_DOCUMENT,
     WORK_DATE_PUBLICATION,
@@ -134,6 +135,18 @@ class MetadataExtractor:
             document_uri,
         )
 
+        is_about = tuple(
+            sorted(
+                str(resource)
+                for resource in graph.objects(
+                    document_uri,
+                    IS_ABOUT,
+                )
+                if isinstance(resource, URIRef)
+            )
+        )
+
+
         return DocumentMetadata(
             celex=celex,
             title=title,
@@ -146,6 +159,7 @@ class MetadataExtractor:
             date_document=date_document,
             date_publication=date_publication,
             eurovoc_concepts=eurovoc_concepts,
+            is_about=is_about,
         )
 
     def _extract_titles(

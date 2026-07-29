@@ -34,3 +34,6 @@ WORK_IS_ABOUT_CONCEPT_EUROVOC = URIRef(
     f"{CDM_URI_PREFIX}work_is_about_concept_eurovoc"
 )
 
+IS_ABOUT = URIRef(
+    f"{CDM_URI_PREFIX}is_about"
+)

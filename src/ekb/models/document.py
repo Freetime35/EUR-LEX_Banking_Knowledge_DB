@@ -41,3 +41,5 @@ class DocumentMetadata:
     languages: list[str] = field(default_factory=list)
     
     eurovoc_concepts: tuple[str, ...] = ()
+
+    is_about: tuple[str, ...] = ()

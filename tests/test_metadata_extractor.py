@@ -544,3 +544,38 @@ def test_extract_eurovoc_concepts() -> None:
         "http://eurovoc.europa.eu/8469",
         "http://eurovoc.europa.eu/c_406ad4cc",
     )
+
+
+def test_extract_is_about_resources() -> None:
+    graph = Graph()
+
+    work = URIRef(
+        "http://publications.europa.eu/resource/celex/32022R2554"
+    )
+
+    graph.add(
+        (
+            work,
+            CDM.is_about,
+            URIRef("http://eurovoc.europa.eu/5188"),
+        )
+    )
+    graph.add(
+        (
+            work,
+            CDM.is_about,
+            URIRef(
+                "http://publications.europa.eu/"
+                "resource/authority/subject-matter/TELE"
+            ),
+        )
+    )
+
+    metadata = MetadataExtractor().extract(graph, work)
+
+    assert metadata is not None
+    assert metadata.is_about == (
+        "http://eurovoc.europa.eu/5188",
+        "http://publications.europa.eu/"
+        "resource/authority/subject-matter/TELE",
+    )
