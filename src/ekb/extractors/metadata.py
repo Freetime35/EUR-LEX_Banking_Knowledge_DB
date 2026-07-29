@@ -8,6 +8,7 @@ from rdflib.namespace import OWL, RDF
 from ekb.cdm import (
     RESOURCE_LEGAL_TYPE,
     WORK_DATE_DOCUMENT,
+    WORK_DATE_PUBLICATION,
 )
 from ekb.models.document import DocumentMetadata
 
@@ -122,6 +123,11 @@ class MetadataExtractor:
             document_uri,
         )
 
+        date_publication = self._extract_publication_date(
+            graph,
+            document_uri,
+        )
+
         return DocumentMetadata(
             celex=celex,
             title=title,
@@ -132,6 +138,7 @@ class MetadataExtractor:
             legal_type=legal_type,
             rdf_types=rdf_types,
             date_document=date_document,
+            date_publication=date_publication,
         )
 
     def _extract_titles(
@@ -515,6 +522,23 @@ class MetadataExtractor:
         document_date = str(value).strip()
 
         return document_date or None
+
+    def _extract_publication_date(
+        self,
+        graph: Graph,
+        document_uri: URIRef,
+    ) -> str | None:
+        value = graph.value(
+            document_uri,
+            WORK_DATE_PUBLICATION,
+        )
+
+        if value is None:
+            return None
+
+        publication_date = str(value).strip()
+
+        return publication_date or None
 
     def _extract_document_type(
         self,

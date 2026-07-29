@@ -486,3 +486,27 @@ def test_extract_document_date() -> None:
     metadata = MetadataExtractor().extract(graph, work)
 
     assert metadata.date_document == "2022-12-14"
+
+
+def test_extract_publication_date() -> None:
+    graph = Graph()
+
+    work = URIRef(
+        "http://publications.europa.eu/resource/celex/32022R2554"
+    )
+
+    graph.add(
+        (
+            work,
+            CDM.work_date_publication,
+            Literal("2022-12-27"),
+        )
+    )
+
+    metadata = MetadataExtractor().extract(
+        graph,
+        work,
+    )
+
+    assert metadata is not None
+    assert metadata.date_publication == "2022-12-27"
