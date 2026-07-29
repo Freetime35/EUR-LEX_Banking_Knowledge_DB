@@ -17,3 +17,7 @@ WORK_CITES = URIRef(
 RESOURCE_LEGAL_BASED_ON = URIRef(
     f"{CDM_URI_PREFIX}resource_legal_based_on_resource_legal"
 )
+
+RESOURCE_LEGAL_TYPE = URIRef(
+    f"{CDM_URI_PREFIX}resource_legal_type"
+)

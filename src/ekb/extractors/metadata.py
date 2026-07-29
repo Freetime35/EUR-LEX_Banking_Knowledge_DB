@@ -3,8 +3,9 @@
 from urllib.parse import unquote
 
 from rdflib import Graph, Literal, URIRef
-from rdflib.namespace import OWL
+from rdflib.namespace import OWL, RDF
 
+from ekb.cdm import RESOURCE_LEGAL_TYPE
 from ekb.models.document import DocumentMetadata
 
 CELEX_URI_PREFIX = (
@@ -50,6 +51,20 @@ LANGUAGE_CODE_MAPPING = {
 }
 
 
+LEGAL_TYPE_PRIORITY = (
+    "regulation_delegated",
+    "regulation_implementing",
+    "directive_delegated",
+    "directive_implementing",
+    "regulation",
+    "directive",
+    "decision",
+    "recommendation",
+    "opinion",
+    "resolution",
+)
+
+
 class MetadataExtractor:
     """Extract metadata describing a legal document."""
 
@@ -85,13 +100,30 @@ class MetadataExtractor:
             titles
         )
 
+        document_type = self._extract_document_type(
+            graph,
+            document_uri,
+        )
+
+        rdf_types = self._extract_rdf_types(
+            graph,
+            document_uri,
+        )
+
+        legal_type = self._extract_legal_type(
+            rdf_types,
+        )
+
         return DocumentMetadata(
             celex=celex,
             title=title,
             titles=titles,
             eli=eli,
             cellar_id=cellar_id,
-        )
+            document_type=document_type,
+            legal_type=legal_type,
+            rdf_types=rdf_types,
+            )
 
     def _extract_titles(
         self,
@@ -458,6 +490,23 @@ class MetadataExtractor:
 
         return None
 
+    def _extract_document_type(
+        self,
+        graph: Graph,
+        document_uri: URIRef,
+    ) -> str | None:
+        value = graph.value(
+            document_uri,
+            RESOURCE_LEGAL_TYPE,
+        )
+
+        if value is None:
+            return None
+
+        document_type = str(value).strip()
+
+        return document_type or None
+
     def _celex_from_uri(
         self,
         uri: object,
@@ -513,3 +562,43 @@ class MetadataExtractor:
         )
 
         return unquote(encoded_cellar_id)
+
+
+        
+    def _extract_rdf_types(
+        self,
+        graph: Graph,
+        document_uri: URIRef,
+    ) -> tuple[str, ...]:
+        rdf_types = []
+
+        for value in graph.objects(
+            document_uri,
+            RDF.type,
+        ):
+            value_str = str(value)
+
+            if "#" in value_str:
+                rdf_type = value_str.rsplit("#", 1)[-1]
+            else:
+                rdf_type = value_str.rstrip("/").rsplit("/", 1)[-1]
+
+            rdf_type = rdf_type.strip()
+
+            if rdf_type:
+                rdf_types.append(rdf_type)
+
+        return tuple(sorted(set(rdf_types)))
+
+
+    def _extract_legal_type(
+        self,
+        rdf_types: tuple[str, ...],
+    ) -> str | None:
+        rdf_type_set = set(rdf_types)
+
+        for legal_type in LEGAL_TYPE_PRIORITY:
+            if legal_type in rdf_type_set:
+                return legal_type
+
+        return None
